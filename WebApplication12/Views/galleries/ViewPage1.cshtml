@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <style>
+           #table div{float:left;position:relative;width:300px}
+           #table h3{float:left;position:relative;}
+        #table img{
+              position:relative;
+              width:100px;height:100px;
+           }
+           #searchedImg h3{float:left;position:relative;}
+           #searchedImg div{float:left;position:relative;width:300px}
+           #searchedImg img{
+              position:relative;
+              width:200px;height:200px;display:block;
+           }
+           #searchedImg{position:relative;width:100%;border-color:red;border-style:solid;height:300px;overflow:scroll;display:none}
+    </style>
+</head>
+<body onload="">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 style="text-align:center">Web technology Sample</h1>
+            <p style="text-align:center">This is the first sample for .NET techniques including some other stuff HTML,CSS,JAVASCRIPT</p>
+        </div>
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <input onclick="search()" id="btn" type="submit" value="search" class="btn btn-primary btn-md" />
+                    </div>
+
+                    <div class="col-xs-4">
+                        <input id="search" placeholder="Search for..." class="form-control" type="text">
+                    </div>
+                </div>
+                <br />
+
+
+
+            </div>
+        </div>
+
+
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+
+
+                <div id="searchedImg">
+
+                </div>
+                <div id="table">
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div id="galleryGroup">
+                    <br\>
+                        <div class="col-xs-2">
+                            <input onclick="AddToGallery()" type="submit" value="AddToGallery" class="btn btn-primary btn-md" />
+                        </div>
+                        <p>Click some pics to make your gallery</p>
+                </div>
+            </div>
+        </div>
+            </div>
+            <script>
+                var selectedItem = [];
+                var searchlist = [];
+                var checkGallery = [];
+                var gallery;
+                var gallery1 = [];
+
+
+                var galleryGroup = document.getElementById('galleryGroup');
+                var searchTxt = document.getElementById('search');
+                var count = 0;
+                var btn = document.getElementById('btn');
+                var searchedImg = document.getElementById('searchedImg');
+
+                var table = document.getElementById('table');
+
+                var xmlhttp = new XMLHttpRequest();
+                var url = "http://localhost:51012/galleries/Indexa";
+                xmlhttp.open("GET", url, true);
+
+                xmlhttp.send();
+                xmlhttp.onreadystatechange = function () {
+
+                    gallery = JSON.parse(xmlhttp.responseText);
+                    for (var t = 0; t < gallery.length; t++) {
+                        count++;
+                        if (count <= gallery.length) {
+                            gallery1.push({ id: count, name: gallery[t].name, link: gallery[t].link });
+                            table.innerHTML += '<div num="' + count + '" class="item" ><h3>' + gallery[t].name + '</h3><img src="' + gallery[t].link + '"class="img-circle"width="304" height="236" /><input type="checkbox" class="check" num="' + count + '" /></div>';
+                            console.log(gallery1[t].id);
+                        }
+
+
+                    }
+                    console.log(gallery.length);
+
+
+                };
+
+                var checklist = [];
+                function arraysearch(arr, val) {
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i] == val) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                var search = function () {
+
+                    for (var i = 0; i < gallery1.length; i++) {
+                        if (gallery1[i].name == searchTxt.value) {
+
+                            if (!arraysearch(checklist, gallery1[i].id)) {
+                                searchedImg.style.display = "block";
+                                searchedImg.innerHTML += '<div num="' + gallery1[i].id + '" ><h3>' + gallery1[i].name + '</h3><img src="' + gallery1[i].link + '"/><input type="checkbox" class="check" num="' + gallery1[i].id + '" /></div>';
+                                checklist.push(gallery1[i].id);
+                            }
+
+                        }
+
+
+                    }
+                }
+
+                var AddToGallery = function () {
+                    for (var i = 0; i < document.getElementsByClassName("check").length; i++) {
+
+                        if (document.getElementsByClassName("check")[i].checked) {
+                            for (var ii = 0; ii < document.getElementsByTagName('div').length; ii++) {
+                                if (document.getElementsByTagName('div')[ii].getAttribute('num') == document.getElementsByClassName('check')[i].getAttribute('num') && document.getElementsByClassName("check")[i].checked) {
+                                    if (!arraysearch(checkGallery, document.getElementsByTagName('div')[ii].getAttribute('num'))) {
+
+                                        galleryGroup.innerHTML += document.getElementsByTagName('div')[ii].innerHTML;
+                                        checkGallery.push(document.getElementsByTagName('div')[ii].getAttribute('num'));
+                                    }
+
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+
+            </script>
+</body>
+</html>

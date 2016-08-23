@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
+<body>
+   <input onclick="j()" id="btn" type="submit" value="search" /><input id="search" />
+    <table id="table">
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+    <script>
+        var search = document.getElementById('search');
+        var request = function () {
+            var btn = document.getElementById('btn');
+            
+           
+            var table = document.getElementById('teble');
+            var str1 = ""
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost:51012/galleries/Indexa?name=" + search.value;
+            
+            xmlhttp.onreadystatechange = function () {
+                console.log(xmlhttp.responseText);
+                 var   gallery = JSON.parse(xmlhttp.responseText);
+                    for (var t in gallery) {
+                        str1.concat('<tr><td>' + gallery[t].id + '</td><td>' + gallery[t].name + '</td><td><img scr="' + gallery[t].link + '"/></td><tr/>');
+                        console.log(str1);
+                    }
+                    table.innerHTML = str1;
+                
+            };
+            xmlhttp.open("GET", url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send();
+        };
+        var j = function () {
+            $.get("http://localhost:51012/galleries/Indexa?name=" + search.value, function (data, status) {
+                console.log(data);
+            });
+        }
+    </script>
+</body>
+</html>
